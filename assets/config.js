@@ -28,6 +28,9 @@ window.SITE_CONFIG = {
 
   whatsapp: "972545529232",
 
+  // מזהה האתר ב־Umami (סטטיסטיקה בלי עוגיות). אם ריק, אין מדידה.
+  umamiWebsiteId: "fc6f6fe0-9353-4cbb-b011-8332ca120257",
+
   // מועדי הסדנה. soldOut: true סוגר מועד שהתמלא.
   sessions: [
     {

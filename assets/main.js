@@ -72,6 +72,46 @@
     $('[data-a11y-reset]', slot).addEventListener('click', function () { state = {}; apply(); });
   }
 
+
+  /* ---------- מדידה (Umami) ---------- */
+  var trackQueue = [];
+  function track(name, data) {
+    try {
+      if (window.umami && typeof window.umami.track === 'function') window.umami.track(name, data);
+      else trackQueue.push([name, data]);
+    } catch (e) { /* המדידה לא עוצרת שום דבר */ }
+  }
+  function getSource() { return store('trafficSource') || {}; }
+
+  function initAnalytics() {
+    // שומרים מאיפה הגיע הביקור (למשל ?utm_source=instagram), כדי לצרף להרשמה
+    var q = new URLSearchParams(location.search);
+    var src = q.get('utm_source') || q.get('src');
+    if (src) {
+      store('trafficSource', {
+        source: src,
+        medium: q.get('utm_medium') || '',
+        campaign: q.get('utm_campaign') || '',
+        at: new Date().toISOString()
+      });
+    }
+    var id = CFG.umamiWebsiteId;
+    if (!id) return;
+    var s = doc.createElement('script');
+    s.defer = true;
+    s.src = 'https://cloud.umami.is/script.js';
+    s.setAttribute('data-website-id', id);
+    s.setAttribute('data-domains', 'zlilbj.co.il,www.zlilbj.co.il');
+    s.onload = function () {
+      var flush = function () {
+        if (!window.umami) return setTimeout(flush, 200);
+        trackQueue.splice(0).forEach(function (t) { window.umami.track(t[0], t[1]); });
+      };
+      flush();
+    };
+    doc.head.appendChild(s);
+  }
+
   /* ---------- מחיר: הרשמה מוקדמת או מחיר מלא ---------- */
   function isEarly() {
     var q = new URLSearchParams(location.search).get('price');
@@ -175,8 +215,13 @@
         price: PRICE,
         earlyBird: EARLY,
         submittedAt: new Date().toISOString(),
-        page: location.href
+        page: location.href,
+        source: getSource().source || '',
+        sourceMedium: getSource().medium || '',
+        sourceCampaign: getSource().campaign || ''
       };
+
+      track('שליחת טופס הרשמה', { session: data.session, source: data.source || 'ישיר' });
 
       // דף התודה משתמש בזה כדי להציע את המועד הנכון ליומן
       store('workshopReg', { session: data.session });
@@ -245,7 +290,9 @@
       if (firstBad) { firstBad.focus(); return; }
 
       var wants = $all('.chip[aria-pressed="true"]', form).map(function (c) { return c.textContent.trim(); });
+      track('טופס מועדים נוספים', { source: getSource().source || 'ישיר' });
       var data = {
+        source: getSource().source || '',
         name: name.value.trim(),
         contact: c,
         interestedIn: wants,
@@ -297,6 +344,8 @@
     var sessions = (CFG.sessions || []).filter(function (s) { return !chosen || s.id === chosen; });
     if (!sessions.length) sessions = CFG.sessions || [];
 
+    track('תשלום הושלם', { session: chosen || 'לא ידוע', source: getSource().source || 'ישיר' });
+
     var details = 'סדנה בהנחיית צליל בן ג׳ויה. המיקום המדויק בחוף הכרמל יישלח במייל. מה להביא: מחשב נייד או טלפון, והערכה כללית של ההכנסות וההוצאות החודשיות של העסק.';
     var title = 'סדנה: לשים מספרים על החלום';
     var location_ = 'חוף הכרמל (המיקום המדויק יישלח במייל)';
@@ -326,6 +375,7 @@
   }
 
   function init() {
+    initAnalytics();
     mountA11y();
     applyPrice();
     applySessions();

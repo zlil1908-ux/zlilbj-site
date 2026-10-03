@@ -1065,3 +1065,5 @@ html.a11y-motion *, html.a11y-motion *::before, html.a11y-motion *::after {
 .next-step > div { display: flex; flex-direction: column; gap: 4px; }
 .thanks-actions .btn { padding: 0 16px; }
 @media (max-width: 959px) { .site-header.simple { padding: 28px 56px 20px; } }
+.doc-fine { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 0.8125rem !important; line-height: 1.6 !important; color: var(--muted); }
+.doc .ltr { white-space: nowrap; }
