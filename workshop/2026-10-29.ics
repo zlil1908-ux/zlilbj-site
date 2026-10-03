@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//zlilbj.co.il//workshop//HE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:workshop-2026-10-29@zlilbj.co.il
+DTSTAMP:20261003T111031Z
+DTSTART:20261029T070000Z
+DTEND:20261029T100000Z
+SUMMARY:סדנה: לשים מספרים על החלום
+LOCATION:חוף הכרמל (המיקום המדויק יישלח במייל
+ )
+DESCRIPTION:סדנה בהנחיית צליל בן ג׳ויה.\nמה להב
+ יא: מחשב נייד או טלפון\, והערכה כללית של ה
+ הכנסות וההוצאות החודשיות של העסק.
+URL:https://zlilbj.co.il/workshop/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:מחר: סדנת לשים מספרים על החלום
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR

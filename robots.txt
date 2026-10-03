@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /workshop/thanks/
+Sitemap: https://zlilbj.co.il/sitemap.xml
