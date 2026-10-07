@@ -10,8 +10,8 @@ window.SITE_CONFIG = {
   // קישורי התשלום משירות הסליקה.
   // כל עוד הם ריקים, כפתור התשלום מציג הודעה שההרשמה תיפתח בקרוב.
   paymentLinks: {
-    early: "",   // קישור לתשלום של 249 ₪
-    regular: ""  // קישור לתשלום של 399 ₪
+    early: "https://private.invoice4u.co.il/newsite/he/clearing/public/i4u-clearing?ProductGuid=8eb6475a-de01-409c-b054-507d763f173a",   // אותו דף, עם הנחה עד 10/10
+    regular: "https://private.invoice4u.co.il/newsite/he/clearing/public/i4u-clearing?ProductGuid=8eb6475a-de01-409c-b054-507d763f173a"  // אותו דף, מחיר מלא
   },
 
   // שמות הפרמטרים שבהם שירות הסליקה מקבל פרטים למילוי מראש.
