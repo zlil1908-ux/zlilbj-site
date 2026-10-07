@@ -350,11 +350,28 @@
     var title = 'סדנה: לשים מספרים על החלום';
     var location_ = 'חוף הכרמל (המיקום המדויק יישלח במייל)';
 
+    // גוגל מקבל את השעה כשעה מקומית בשעון ישראל (בלי Z), יחד עם ctz.
+    // ההמרה מ־UTC נעשית כאן, כך שמעבר לשעון קיץ או חורף מחושב לבד.
+    function israelLocal(utc) {
+      var m = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/.exec(utc || '');
+      if (!m) return utc;
+      var d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]));
+      try {
+        var parts = {};
+        new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Asia/Jerusalem', hourCycle: 'h23',
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        }).formatToParts(d).forEach(function (p) { parts[p.type] = p.value; });
+        return parts.year + parts.month + parts.day + 'T' + parts.hour + parts.minute + parts.second;
+      } catch (e) { return utc; }
+    }
+
     var html = '';
     sessions.forEach(function (s) {
       var g = 'https://calendar.google.com/calendar/render?action=TEMPLATE' +
         '&text=' + encodeURIComponent(title) +
-        '&dates=' + s.utcStart + '/' + s.utcEnd +
+        '&dates=' + israelLocal(s.utcStart) + '/' + israelLocal(s.utcEnd) +
         '&details=' + encodeURIComponent(details) +
         '&location=' + encodeURIComponent(location_) +
         '&ctz=Asia/Jerusalem';
